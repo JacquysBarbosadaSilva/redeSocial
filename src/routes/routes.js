@@ -4,22 +4,25 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import Login from "../screens/login";
 
-const tabs = createBottomTabNavigator();
-const stack = createNativeStackNavigator();
+const Tabs = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
 function TabsNavigator() {
   return (
-    <tabs.Navigator>
-    </tabs.Navigator>
+    <Tabs.Navigator>
+    </Tabs.Navigator>
   );
 }
 
 function StackNavigator() {
   return (
-    <stack.Navigator>
-      <stack.Screen name="Login" component={Login} />
-    </stack.Navigator>
+    <Stack.Navigator>
+      <Stack.Screen 
+        name="Login" 
+        options={{ headerShown: false }}
+        initialRouteName="Login" component={Login} />
+    </Stack.Navigator>
   );
 }
 
-export default StackNavigator();
+export default StackNavigator;

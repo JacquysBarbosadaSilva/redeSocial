@@ -7,3 +7,5 @@ npm install @react-navigation/bottom-tabs
 npm install @react-navigation/native-stack
 
 npm install firebase@11.6.0 --save
+
+npm install react-native-linear-gradient

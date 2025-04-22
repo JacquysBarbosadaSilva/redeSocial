@@ -1,108 +1,159 @@
-// Jacquys Barbosa Silva
-
 import React, { useState } from "react";
 import {
   View,
-  ScrollView,
   TextInput,
   Text,
-  TouchableOpacity,
-  ImageBackground,
+  Pressable,
   StyleSheet,
-
 } from "react-native";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-// import app from "../../firebaseConfig";
+import { LinearGradient } from "expo-linear-gradient";
 
 const RealizarLogin = ({ navigation }) => {
-  const img =
-    "https://img.freepik.com/vetores-gratis/vetor-azul-escuro-do-fundo-da-historia-do-facebook-de-memphis_53876-162121.jpg?t=st=1743519404~exp=1743523004~hmac=0956c84fe373416ac4719a6be4a53a27d5f2f68a70c952c7f34477f065057055&w=740";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [inputFocus, setInputFocus] = useState(null);
 
   const tentarLogar = () => {
-    const auth = getAuth(app);
-    signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        navigation.navigate("PaginaPrincipal");
-      })
-      .catch((error) => {
-        console.error("Login Falhou", error);
-      });
+    console.log("Tentando logar com:", email, password);
   };
 
   return (
-    <ImageBackground source={{ uri: img }} style={styles.background}>
-      <View style={styles.container}>
-        <Text style={styles.title}>Login</Text>
+    <View style={styles.background}>
+      <LinearGradient
+        colors={["#6153DB", "#000"]}
+        style={styles.gradient}
+      >
+        <Text style={styles.logoText}>Likeê</Text>
 
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
+        <View style={styles.container}>
+          <TextInput
+            style={[
+              styles.input,
+              inputFocus === "email" && styles.inputFocused,
+            ]}
+            placeholder="Email"
+            placeholderTextColor="#ccc"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            onFocus={() => setInputFocus("email")}
+            onBlur={() => setInputFocus(null)}
+            underlineColorAndroid="transparent"
+          />
 
-        <TextInput
-          style={styles.input}
-          placeholder="Senha"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
+          <TextInput
+            style={[
+              styles.input,
+              inputFocus === "password" && styles.inputFocused,
+            ]}
+            placeholder="Senha"
+            placeholderTextColor="#ccc"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            onFocus={() => setInputFocus("password")}
+            onBlur={() => setInputFocus(null)}
+            underlineColorAndroid="transparent"
+          />
 
-        <TouchableOpacity style={styles.button} onPress={tentarLogar}>
-          <Text style={styles.buttonText}>Entrar</Text>
-        </TouchableOpacity>
 
-        <Text 
-            onPress={() => navigation.navigate("Cadastrar")} 
-            style={{ color: "#0C242E",fontWeight: 'bold'}} >Cadastrar-se
-          </Text>
-      </View>
-    </ImageBackground>
+          <View style={styles.row}>
+            <Pressable
+              onPress={tentarLogar}
+              style={{ flex: 1, marginRight: 5 }}
+            >
+              <LinearGradient
+                colors={["#53c7db", "#5371db"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={styles.button}
+              >
+                <Text style={styles.buttonText}>Entrar</Text>
+              </LinearGradient>
+            </Pressable>
+
+            <Pressable
+              onPress={() => navigation.navigate("Cadastrar")}
+              style={[styles.button, styles.registerButton]}
+            >
+              <Text style={[styles.buttonText, styles.registerText]}>
+                Cadastrar-se
+              </Text>
+            </Pressable>
+          </View>
+        </View>
+      </LinearGradient>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   background: {
     flex: 1,
+    backgroundColor: "#000",
     justifyContent: "center",
     alignItems: "center",
   },
-  container: {
-    backgroundColor: "white",
-    padding: 20,
-    borderRadius: 10,
-    width: "80%",
+  gradient: {
+    height: "100%",
+    width: "100%",
+    justifyContent: "center",
     alignItems: "center",
-    elevation: 5,
   },
-  title: {
-    fontSize: 24,
+  logoText: {
+    fontSize: 40,
     fontWeight: "bold",
-    marginBottom: 20,
+    marginBottom: 30,
+    color: "#53c7db",
+  },
+  container: {
+    width: "80%",
   },
   input: {
     width: "100%",
-    padding: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 5,
     marginBottom: 10,
-    borderWidth: 1,
-    borderRadius: 5,
-    borderColor: "#ccc",
+    borderBottomWidth: 1,
+    borderColor: "#4887be",
+    color: "#fff",
+    backgroundColor: "transparent",
+  },
+  inputFocused: {
+    borderColor: "#53c7db",
+    borderBottomWidth: 2,
+  },
+  divider: {
+    borderBottomWidth: 1,
+    borderBottomColor: "#53c7db",
+    marginVertical: 20,
+  },
+  row: {
+    flexDirection: "row",
+    marginTop: 30,
+    justifyContent: "space-between",
   },
   button: {
-    backgroundColor: "#0C242E",
-    padding: 10,
-    borderRadius: 5,
+    paddingVertical: 12,
+    borderRadius: 8,
     alignItems: "center",
-    width: "100%",
+    justifyContent: "center",
   },
   buttonText: {
     color: "#fff",
     fontWeight: "bold",
+    fontSize: 16,
+  },
+  registerButton: {
+    flex: 1,
+    marginLeft: 5,
+    backgroundColor: "transparent",
+    borderWidth: 1,
+    borderColor: "#53c7db",
+  },
+  registerText: {
+    color: "#53c7db",
   },
 });
 
