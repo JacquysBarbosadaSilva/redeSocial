@@ -20,7 +20,7 @@ const RealizarLogin = ({ navigation }) => {
   return (
     <View style={styles.background}>
       <LinearGradient
-        colors={["#6153DB", "#000"]}
+        colors={["#6153DB", "#6153DB", "#6153DB", "#53DBC3"]}
         style={styles.gradient}
       >
         <Text style={styles.logoText}>Likeê</Text>
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     marginBottom: 10,
     borderBottomWidth: 1,
-    borderColor: "#4887be",
+    borderColor: "#53DBC3",
     color: "#fff",
     backgroundColor: "transparent",
   },
