@@ -9,3 +9,9 @@ npm install @react-navigation/native-stack
 npm install react-native-linear-gradient
 
 npm install firebase
+
+npx expo install expo-image-picker
+
+npm install react-native-aws3
+
+npm install @aws-sdk/client-s3

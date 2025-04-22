@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "nomeMeuApp",
-    "slug": "nomeMeuApp",
+    "name": "redeSocial",
+    "slug": "redeSocial",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -17,6 +17,7 @@
     },
     "android": {
       "adaptiveIcon": {
+        "package": "redeSocial",
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       }

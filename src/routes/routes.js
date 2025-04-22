@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import Login from "../screens/login";
+import Cadastrar from "../screens/cadastrar";
 
 const Tabs = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -21,6 +22,11 @@ function StackNavigator() {
         name="Login" 
         options={{ headerShown: false }}
         initialRouteName="Login" component={Login} />
+      
+      <Stack.Screen
+        name="Cadastrar" 
+        options={{ headerShown: false }} 
+        component={Cadastrar} />
     </Stack.Navigator>
   );
 }
