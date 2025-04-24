@@ -13,10 +13,10 @@ import { LinearGradient } from "expo-linear-gradient";
 import * as ImagePicker from "expo-image-picker";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { getFirestore, doc, setDoc } from "firebase/firestore";
-import { getApp } from "firebase/app";
-import s3 from "../../awsConfig";
-
-const S3_BUCKET = "bucket-storage-senai-10";
+import app from "../../firebaseConfig"; // ajuste o caminho conforme necessário
+import { s3 } from "../../awsConfig";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
+const S3_BUCKET = "likee-bucket";
 
 const Cadastrar = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -25,6 +25,7 @@ const Cadastrar = ({ navigation }) => {
   const [imageUri, setImageUri] = useState(null);
   const [inputFocus, setInputFocus] = useState(null);
 
+  // Função para selecionar imagem
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -34,57 +35,69 @@ const Cadastrar = ({ navigation }) => {
     });
 
     if (!result.canceled) {
-      setImageUri(result.assets[0].uri);
+      setImageUri(result.assets[0].uri); // Salva o URI da imagem selecionada
     }
   };
 
+  // Função para registrar o usuário
   const handleCadastro = async () => {
     if (!email || !password || !nome) {
-      Alert.alert("Erro", "Preencha todos os campos obrigatórios.");
+      Alert.alert("Erro", "Por favor, preencha todos os campos obrigatórios");
       return;
     }
 
-    const auth = getAuth(getApp());
-    const firestore = getFirestore(getApp());
+    const auth = getAuth(app);
+    const firestore = getFirestore(app);
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      // Criação do usuário no Firebase Authentication
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       const user = userCredential.user;
-      let photoUrl = null;
+
+      let photoUrl = null; // Variável para armazenar a URL da foto
 
       if (imageUri) {
         const filename = imageUri.substring(imageUri.lastIndexOf("/") + 1);
         const filePath = `perfil_imagem/${user.uid}/${filename}`;
+
         const response = await fetch(imageUri);
         const blob = await response.blob();
 
-        const uploadParams = {
+        const command = new PutObjectCommand({
           Bucket: S3_BUCKET,
           Key: filePath,
           Body: blob,
           ContentType: "image/jpeg",
-        };
+        });
 
-        const uploadResult = await s3.upload(uploadParams).promise();
-        photoUrl = uploadResult.Location;
+        await s3.send(command);
+        photoUrl = `https://${S3_BUCKET}.s3.sa-east-1.amazonaws.com/${filePath}`;
       }
 
+      // Salvar dados do usuário no Firestore
       await setDoc(doc(firestore, "usuarios", user.uid), {
         uid: user.uid,
         email: email,
         nome: nome,
-        photoUrl: photoUrl,
+        photoUrl: photoUrl, // Salva a URL da foto
       });
 
       Alert.alert("Sucesso", "Usuário cadastrado com sucesso!");
-      navigation.navigate("RealizarLogin");
+      navigation.replace("Tabs"); // Navega para a tela de login
     } catch (error) {
+      console.error("Erro ao cadastrar usuário:", error);
       let mensagemErro = "Erro ao cadastrar usuário: ";
 
+      // Trata erros específicos do Firebase
       if (error.code === "auth/email-already-in-use") {
-        mensagemErro = "Este e-mail já está em uso.";
+        mensagemErro =
+          "Este e-mail já está em uso. Por favor, faça login ou utilize outro e-mail.";
       } else if (error.code === "auth/invalid-email") {
-        mensagemErro = "E-mail inválido.";
+        mensagemErro = "E-mail inválido. Verifique e tente novamente.";
       } else if (error.code === "auth/weak-password") {
         mensagemErro = "A senha deve ter pelo menos 6 caracteres.";
       } else {
@@ -114,7 +127,10 @@ const Cadastrar = ({ navigation }) => {
 
           <View style={styles.container}>
             <TextInput
-              style={[styles.input, inputFocus === "nome" && styles.inputFocused]}
+              style={[
+                styles.input,
+                inputFocus === "nome" && styles.inputFocused,
+              ]}
               placeholder="Nome"
               placeholderTextColor="#ccc"
               value={nome}
@@ -125,7 +141,10 @@ const Cadastrar = ({ navigation }) => {
             />
 
             <TextInput
-              style={[styles.input, inputFocus === "email" && styles.inputFocused]}
+              style={[
+                styles.input,
+                inputFocus === "email" && styles.inputFocused,
+              ]}
               placeholder="Email"
               placeholderTextColor="#ccc"
               value={email}
@@ -138,7 +157,10 @@ const Cadastrar = ({ navigation }) => {
             />
 
             <TextInput
-              style={[styles.input, inputFocus === "password" && styles.inputFocused]}
+              style={[
+                styles.input,
+                inputFocus === "password" && styles.inputFocused,
+              ]}
               placeholder="Senha"
               placeholderTextColor="#ccc"
               value={password}
@@ -154,7 +176,7 @@ const Cadastrar = ({ navigation }) => {
             </TouchableOpacity>
 
             <Text
-              onPress={() => navigation.navigate("RealizarLogin")}
+              onPress={() => navigation.navigate("Login")}
               style={styles.loginLink}
             >
               Já tem uma conta? Faça login
@@ -212,13 +234,16 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   container: {
-    width: "80%",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "300px",
   },
   input: {
     width: "100%",
     paddingVertical: 10,
     paddingHorizontal: 5,
     marginBottom: 10,
+    marginTop: 10,
     borderBottomWidth: 1,
     borderColor: "#53DBC3",
     color: "#fff",
@@ -232,6 +257,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#53c7db",
     paddingVertical: 12,
     borderRadius: 8,
+    padding: 20,
     alignItems: "center",
     marginTop: 20,
   },

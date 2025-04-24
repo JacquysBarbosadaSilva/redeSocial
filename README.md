@@ -15,3 +15,13 @@ npx expo install expo-image-picker
 npm install react-native-aws3
 
 npm install @aws-sdk/client-s3
+
+npm install @aws-sdk/client-s3 @aws-sdk/lib-storage react-native-url-polyfill
+
+npm install --save-dev node-libs-react-native
+
+npm install react-native-vector-icons
+
+npm install react-native-uuid
+
+npm install @aws-sdk/client-s3@latest

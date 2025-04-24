@@ -5,16 +5,26 @@ import {
   Text,
   Pressable,
   StyleSheet,
+  Alert,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../firebaseConfig"; // ajuste o caminho se necessário
 
 const RealizarLogin = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [inputFocus, setInputFocus] = useState(null);
 
-  const tentarLogar = () => {
-    console.log("Tentando logar com:", email, password);
+  const tentarLogar = async () => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      console.log("Usuário logado:", userCredential.user);
+      navigation.replace("Tabs")
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Erro ao logar", "Verifique seu e-mail e senha.");
+    }
   };
 
   return (
@@ -56,7 +66,6 @@ const RealizarLogin = ({ navigation }) => {
             onBlur={() => setInputFocus(null)}
             underlineColorAndroid="transparent"
           />
-
 
           <View style={styles.row}>
             <Pressable
