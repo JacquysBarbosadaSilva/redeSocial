@@ -1,4 +1,3 @@
-// Route.js (atualizado com tela de CriarPost)
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native";
@@ -10,6 +9,7 @@ import Cadastrar from "../screens/cadastrar";
 import Post from "../screens/post";
 import CriarPost from "../screens/criarPost";
 import EditarPerfil from "../screens/editarPerfil";
+import SplashScreenComponent from "../screens/splashScreen"; // Importe o componente SplashScreen
 
 const Tabs = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -37,15 +37,13 @@ function TabsNavigator({ navigation }) {
 
       <Tabs.Screen
         name="Criar"
-        component={() => null}
+        component={CriarPost}
         options={{
-          tabBarLabel: "",
-          tabBarIcon: () => null,
+          tabBarLabel: "Criar",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="add-circle" size={size} color={color} />
+          ),
         }}
-        onPress={() => navigation.navigate("CriarPost")}
-        tabBarIcon={({ color, size }) => (
-          <Ionicons name="add-circle" size={size} color={color} />
-        )}
       />
 
       <Tabs.Screen
@@ -66,9 +64,14 @@ function StackNavigator() {
   return (
     <Stack.Navigator>
       <Stack.Screen
+        name="SplashScreen"
+        component={SplashScreenComponent} // Use o componente SplashScreen
+        options={{ headerShown: false }}
+      />
+
+      <Stack.Screen
         name="Login"
         options={{ headerShown: false }}
-        initialRouteName="Login"
         component={Login}
       />
 

@@ -1,16 +1,12 @@
-import { S3Client } from "@aws-sdk/client-s3";
+import AWS from "aws-sdk";
 
-const REGION = "us-east-1"; // Ex: região São Paulo
-const BUCKET_NAME = "likee-bucket";
-
-const s3 = new S3Client({
-  region: REGION,
-  credentials: {
-    accessKeyId: "ASIAYS5ERST6JT4QBEGO",
-    secretAccessKey: "4yRbnahhCiLy8zSm2kUgaHXcLenBiEsF+m3lvFGI",
-    aws_session_token:
-      "IQoJb3JpZ2luX2VjEG8aCXVzLXdlc3QtMiJHMEUCIQCy0aPf2s1soAD9+Dpc0WZas0JPQnpu0SpSiX58iXlndAIgNPWk5Zoj8IWDfW+eW9Z687FR+WzROx5FxRHiIARnn5wquAII+P//////////ARAAGgw1OTAzNjYyMTc0NjgiDOCztpbDcufeeoFoziqMAh5TCJ1GAjrnRvh/wNxykrGofWO/EYVTjyOepO/Ne65bBhUArJrL8itaniCvm6tlqRxnEwmgIM3B8o17ch1nXfsYxD8RfRM1L9GfTVTWWOZcwtwmRzokYzNuvXXNQhpofHLc5l3xS+/y12bJDhF6KajdWeRIypvsHwGUpGIc6kPrnkLUqD084XuOWE88Au+XNf7BopRb+5iEF6MxGDGrjtSKXy+hXxnBQ+8u3m/2kYlspF4fhKWsVrttuKbJTQ292lJlRvsJn8dcyu81YvtVneTvC7wccWdloGZWEOD9pyKFxwiiDTrvcavy/0fE6ylG15NiDE5Gtdam8jxKGyrdcx6C+sYRrSQAvsLKK1EwsdClwAY6nQFYRKv+516hl4dkQ+6YLDJnk6raP1KIT9t+Tf5r+afw3T/hPwjPz6l0S3D+8FzFR24+NUpUaox/c8v006oBiLWunA9AXGJGj5wUhqMxiLxit565A5tOP3YEyBnna0vDLegy25SDKQkr4YWp2hBtU1b+VBASZw9kFXOCYTlo68z0IhQi3KpP+Zujm1ZzpwVKHPhZ8JusBWC5P7LTVaQv",
-  },
+AWS.config.update({
+  accessKeyId: "ASIAYS5ERST6N7X23DD6",
+  secretAccessKey: "rgA5uk/ojLzCf4DlsIiJlDcC/MJeGXnAkJB0Tizk",
+  sessionToken: "IQoJb3JpZ2luX2VjEHsaCXVzLXdlc3QtMiJIMEYCIQDJATtpEAp6ZH9KvJukqeU8engP9Kwz3NVd0msAiESfHAIhALLs10Gdhze2Z8U8S0alOp4jQnPTO0Ix23dUE6pbnoLCKq8CCBQQABoMNTkwMzY2MjE3NDY4Igx5dHori+2Kz/UTyfIqjALZT2SlbZJBMtQ+o4uKi7TsznJo/4y0fbyS8L4XAxcW7bKBsV6dugktbNcqTipMl4rr3VVMg2ffOwCCad9jKj+ynIq6HUcHfhol6u8PZKxKSLz/lleT/IbMdSv1pJ1KPzOn8UCHNWt2U/pU+5WSZAFgh6iQL9S+xPcvJDsJiYcn0fMpHDTq8/x6DtP/qbJh7ekLfrc7tmve0UE204Bd3njC/3xaxI1A2ZBr/BpXIHnPBrRArfa2OBJgsCCImMg+pj+i8LQj3HJ1Kt4eaBBtcc8d7ILlcYACwvCVM2rSXuqvcpfwsBpbpdRBEP1l05PpP5eX/zRwjYNX/4OCsQFNUK3WEyTDuqtacQ4KOt27MNq2qMAGOpwBvCtL50CSCV8G4CZNxXl41caqdRB/KS726TTHIaGyDwhQWVrjEhBsyRQJqfTzrzbXs1i5IdgE2MJDeLLvDezR6hLJL5XoJEgrjVws8oPIuigWpD9Uvkb4rc1Xnrfi6X/efn+8cet0pE3QYNYPBi1m/op8dzdYfCN6LtBr/9DU3x/4M2ogN7ureESzBdMPToaLlEcRkxcLubfOkvw2",
+  region: "us-east-1",
 });
 
-export { s3, BUCKET_NAME };
+const s3 = new AWS.S3();
+
+export default s3;

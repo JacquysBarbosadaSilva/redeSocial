@@ -13,10 +13,12 @@ import { LinearGradient } from "expo-linear-gradient";
 import * as ImagePicker from "expo-image-picker";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { getFirestore, doc, setDoc } from "firebase/firestore";
-import app from "../../firebaseConfig"; // ajuste o caminho conforme necessário
-import { s3 } from "../../awsConfig";
+import { getApp } from "firebase/app"; // ajuste o caminho conforme necessário
+import AWS from "aws-sdk";
+import s3 from "../../awsConfig";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 const S3_BUCKET = "likee-bucket";
+// const s3 =  new AWS.S3();
 
 const Cadastrar = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -46,8 +48,8 @@ const Cadastrar = ({ navigation }) => {
       return;
     }
 
-    const auth = getAuth(app);
-    const firestore = getFirestore(app);
+    const auth = getAuth(getApp());
+    const firestore = getFirestore(getApp());
 
     try {
       // Criação do usuário no Firebase Authentication
@@ -58,25 +60,22 @@ const Cadastrar = ({ navigation }) => {
       );
       const user = userCredential.user;
 
-      let photoUrl = null; // Variável para armazenar a URL da foto
+      const filename = imageUri.substring(imageUri.lastIndexOf("/") + 1);
+      const filePath = `perfil-imagem/${user.uid}/${filename}`;
 
-      if (imageUri) {
-        const filename = imageUri.substring(imageUri.lastIndexOf("/") + 1);
-        const filePath = `perfil_imagem/${user.uid}/${filename}`;
+      const response = await fetch(imageUri);
+      const blob = await response.blob();
 
-        const response = await fetch(imageUri);
-        const blob = await response.blob();
+      const uploadParams =({    
+        Bucket: S3_BUCKET,
+        Key: filePath,
+        Body: blob,
+        ContentType: "image/jpeg",
+      });
 
-        const command = new PutObjectCommand({
-          Bucket: S3_BUCKET,
-          Key: filePath,
-          Body: blob,
-          ContentType: "image/jpeg",
-        });
+        const uploadResult = await s3.upload(uploadParams).promise();
+        const photoUrl = uploadResult.Location;
 
-        await s3.send(command);
-        photoUrl = `https://${S3_BUCKET}.s3.sa-east-1.amazonaws.com/${filePath}`;
-      }
 
       // Salvar dados do usuário no Firestore
       await setDoc(doc(firestore, "usuarios", user.uid), {
@@ -86,7 +85,7 @@ const Cadastrar = ({ navigation }) => {
         photoUrl: photoUrl, // Salva a URL da foto
       });
 
-      Alert.alert("Sucesso", "Usuário cadastrado com sucesso!");
+      alert("Sucesso", "Usuário cadastrado com sucesso!");
       navigation.replace("Tabs"); // Navega para a tela de login
     } catch (error) {
       console.error("Erro ao cadastrar usuário:", error);

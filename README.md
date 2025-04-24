@@ -1,3 +1,5 @@
+npx expo install react-native-web react-dom @expo/metro-runtime
+
 npm install @react-navigation/native
 
 npm install react-native-screens react-native-safe-area-context react-native-gesture-handler react-native-reanimated react-native-vector-icons @react-navigation/native-stack
@@ -25,3 +27,5 @@ npm install react-native-vector-icons
 npm install react-native-uuid
 
 npm install @aws-sdk/client-s3@latest
+
+npx expo install expo-splash-screen
