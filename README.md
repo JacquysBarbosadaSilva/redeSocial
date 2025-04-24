@@ -1,3 +1,10 @@
+Para usar a aplicação, deve-se clonar o repositório ou instalar o .zip, 
+em seguida abra o terminal e escreva "npm install", que já instalará 
+todas as dependências do package.jason, caso alguma dependência nao tenha 
+sido instalada, abaixo possue as dependências utilizadas.
+
+-----------------------------------------------------------------------------
+
 npx expo install react-native-web react-dom @expo/metro-runtime
 
 npm install @react-navigation/native
